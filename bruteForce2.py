@@ -75,8 +75,8 @@ def get_combinaison(liste_des_actions, budget, liste):
             dictionnaire["reste"] = reste
 
             # calcule du benefice realise
-            #gain_action = action["cout_par_action"] * action["benefice"] / 100
-            #dictionnaire["gain_action"] = gain_action
+            gain_action = action["cout_par_action"] * action["benefice"] / 100
+            dictionnaire["gain_action"] = gain_action
 
             # on ajoute le dictionnaire à la liste des associations d'action
             liste.append(dictionnaire)
@@ -86,16 +86,18 @@ def get_combinaison(liste_des_actions, budget, liste):
                 # copie de la liste des actions sans l'action en cours
                 index = list_action.index(action)
                 get_combinaison(liste_des_actions=list_action[index + 1:], budget=reste, liste=liste)
-
+                liste.pop()
                 # sinon on passe à l'élément suivant de la liste
             else:
-                # gain = get_gain_total(liste)
+                gain = get_gain_total(liste)
                 copy_liste = liste.copy()
-                # copy_liste.append(gain)
+                copy_liste.append(gain)
                 best_action.append(copy_liste)
                 liste.pop()
+
         else:
             continue
 
 
 get_combinaison(liste_des_actions=list_action, budget=500, liste=[])
+print(sorted(best_action, key=lambda combinaison: combinaison[-1])[-1])
