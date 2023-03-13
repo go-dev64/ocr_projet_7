@@ -66,9 +66,9 @@ def get_combinaison(liste_des_actions, this_action, budget, liste):
         copy_liste.append(gain)
         best_action.append(copy_liste)
 
-for action in list_action:
-    get_combinaison(liste_des_actions=list_action, budget=500, this_action=action, liste=[])
+#for action in list_action:
+    #get_combinaison(liste_des_actions=list_action, budget=500, this_action=action, liste=[])
 
 
-print(sorted(best_action, key=lambda combinaison: combinaison[-1])[-1])
+#print(sorted(best_action, key=lambda combinaison: combinaison[-1])[-1])
 
