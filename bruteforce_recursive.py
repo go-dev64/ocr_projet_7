@@ -22,6 +22,7 @@ list_action = [{"name": "Action-1", "cout_par_action": 20, "benefice": 5},
 
 action_mini = min([x["cout_par_action"] for x in list_action])
 
+
 def get_gain_total(x):
     gain_total = 0
     for i in x:
@@ -32,43 +33,42 @@ def get_gain_total(x):
 best_action = []
 
 
-def get_combinaison(liste_des_actions, this_action, budget, liste):
-    dictionnaire = {"name": this_action["name"]}
+def get_combinaison(liste_des_actions, budget, liste):
+    budjet_restant = budget
+    for action in liste_des_actions:
+        if budjet_restant - action["cout_par_action"] >= 0:
 
-    # on calcule le reste = budget - cout action
-    reste = budget - this_action["cout_par_action"]
-    dictionnaire["reste"] = reste
+            dictionnaire = {"name": action["name"]}
 
-    # calcule du benefice realise
-    gain_action = this_action["cout_par_action"] * this_action["benefice"] / 100
-    dictionnaire["gain_action"] = gain_action
+            # on calcule le reste = budget - cout action
+            reste = budjet_restant - action["cout_par_action"]
+            dictionnaire["reste"] = reste
 
-    # on ajoute le dictionnaire à la liste des associations d'action
-    liste.append(dictionnaire)
+            # calcule du benefice realise
+            gain_action = action["cout_par_action"] * action["benefice"] / 100
+            dictionnaire["gain_action"] = gain_action
 
-    # si reste different de 0 et supérieur au cout de l'action la plus base
-    if reste >= action_mini:
-        # copie de la liste des actions sans l'action en cours
-        index = liste_des_actions.index(this_action)
-        for j in liste_des_actions[index + 1:]:
-            # on vérifie que le budget restant est divisible par l'action
-            if reste - j["cout_par_action"] >= 0:
-                # si ok → meme exercise mais avec le budget restant
-                get_combinaison(liste_des_actions, budget=reste, this_action=j, liste=liste)
+            # on ajoute le dictionnaire à la liste des associations d'action
+            liste.append(dictionnaire)
+
+            # si reste different de 0 et supérieur au cout de l'action la plus base
+            if reste >= action_mini:
+                # copie de la liste des actions sans l'action en cours
+                index = list_action.index(action)
+                get_combinaison(liste_des_actions=list_action[index + 1:], budget=reste, liste=liste)
                 liste.pop()
-
                 # sinon on passe à l'élément suivant de la liste
             else:
-                continue
-    else:
-        gain = get_gain_total(liste)
-        copy_liste = liste.copy()
-        copy_liste.append(gain)
-        best_action.append(copy_liste)
+                gain = get_gain_total(liste)
+                copy_liste = liste.copy()
+                copy_liste.append(gain)
+                best_action.append(copy_liste)
+                liste.pop()
 
-#for action in list_action:
-    #get_combinaison(liste_des_actions=list_action, budget=500, this_action=action, liste=[])
+        else:
+            continue
 
 
-#print(sorted(best_action, key=lambda combinaison: combinaison[-1])[-1])
-
+get_combinaison(liste_des_actions=list_action, budget=500, liste=[])
+print(sorted(best_action, key=lambda combinaison: combinaison[-1])[-1])
+print(len(best_action))
