@@ -1,5 +1,9 @@
 import time
+
 import psutil
+
+import numpy as np
+
 
 def decorator(function):
     def wrapper(*args, **kwargs):
@@ -14,12 +18,13 @@ def decorator(function):
 
 def loop(data_list, function):
     array_time = []
-    for i in range(1, 21):
+    array_ram = []
+    for i in range(1, 25, 1):
         x = function(data_list[:i])
         array_time.append(x[1])
         memory = psutil.virtual_memory()
-        print('RAM dispo(Gb):', memory[1] / 1000000000, 'ram utilisé en Gb', memory[3]/ 1000000000 , memory[0]/ 1000000000 )
-    print(array_time)
-
-    return array_time
+        array_ram.append(memory[3] / 1000000000)
+        print('nbr entree', i, "/ram:", memory[3] / 1000000000, "/time:", x[1])
+        print(len(x[0]))
+    return array_time, array_ram
 

@@ -1,8 +1,7 @@
 import csv
 
+import numpy as np
 
-
-from memory_profiler import profile
 
 import matplotlib.pyplot as plt
 
@@ -15,7 +14,6 @@ with open('csv_file/dataset_20.csv', newline='') as f:
 
 
 
-@decorator
 def brute_force_binary(liste_element):
     # liste des différentes combinaison possible
     list_combinaison = []
@@ -27,7 +25,7 @@ def brute_force_binary(liste_element):
     for i in range(nombre_bits_combinaison):
         # on convertit le nombre i en nombre binaire de longueur de là du nombre d'éléments longueur du tableau
         combinaison_bits = f"{i:0{nombre_element}b}"
-        # on convertit le string en list d'entier 0 et
+        # on convertit le string en list d'entier 0 et 1.
         int_combinaison = [int(x) for x in combinaison_bits]
         # on associe chaque element à l'index du tableau d'action.
         combinaison = []
@@ -44,8 +42,17 @@ def brute_force_binary(liste_element):
             combinaison.append(gain_total)
             # alors on ajoute la combinaison dans la liste des combinaisons
             list_combinaison.append(combinaison)
-    list_combinaison_sorted = sorted(list_combinaison, key=lambda x: x[-1])
+
+    return list_combinaison
+
+
+@decorator
+def toto(list_element):
+    li = brute_force_binary(list_element)
+    list_combinaison_sorted = sorted(li, key=lambda x: x[-1])
     return list_combinaison_sorted
+
+
 
 
 # Génére la Liste des meilleures actions par récursivité
@@ -105,10 +112,21 @@ def start(liste_des_actions, budget=500, liste=None):
 
 
 array_recursive = loop(list_action_dataset_20, start)
-array_binary = loop(list_action_dataset_20, brute_force_binary)
-temps = [x for x in range(1, 21)]
-"""
-plt.plot(temps, array_recursive, label='bruteForce récursif', color='blue')
-plt.plot(temps, array_binary, label='bruteForce iteratif', color='green')
+print(array_recursive)
+array_binary = loop(list_action_dataset_20, toto)
+print(array_binary)
+nombre_entre = [x for x in range(1, 25, 1)]
+
+plt.plot(nombre_entre, array_recursive[0], label='bruteForce récursif', color='blue')
+plt.plot(nombre_entre, array_binary[0], label='bruteForce itératif', color='green')
+plt.xlabel('nombre entrée')
+plt.ylabel('temps execution (s)')
 plt.legend()
-plt.show()"""
+plt.show()
+
+plt.plot(nombre_entre, array_recursive[1], label='bruteForce récursif', color='blue')
+plt.plot(nombre_entre, array_binary[1], label='bruteForce itératif', color='green')
+plt.xlabel('nombre entrée')
+plt.ylabel('Ram utilisée (Go)')
+plt.legend()
+plt.show()
