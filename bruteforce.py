@@ -1,11 +1,6 @@
 import csv
 
-import numpy as np
-
-
-import matplotlib.pyplot as plt
-
-from decorateur import decorator, loop
+from utile import decorator, print_result
 
 with open('csv_file/dataset_20.csv', newline='') as f:
     reader = csv.reader(f)
@@ -13,8 +8,7 @@ with open('csv_file/dataset_20.csv', newline='') as f:
     list_action_dataset_20 = [[row[0], int(row[1]), int(row[2])] for row in reader]
 
 
-
-def brute_force_binary(liste_element):
+def get_combinaison_by_iteration(liste_element):
     # liste des différentes combinaison possible
     list_combinaison = []
     # on définit le nombre d'éléments dans la liste
@@ -35,7 +29,7 @@ def brute_force_binary(liste_element):
                 # on ajoute l'action dans la combinaison
                 combinaison.append(liste_element[idx])
         # on ajoute la combinaison dans la liste des combinaisons : Si :
-        # Si le nombre élément de la combinaison est supérieur à 2) et la somme du cout action :
+        # Si la somme du cout action :
         if sum([x[1] for x in combinaison]) < 500:
             # on calcule le gain total de la combinaison
             gain_total = sum([x[1] * x[2] / 100 for x in combinaison])
@@ -47,41 +41,38 @@ def brute_force_binary(liste_element):
 
 
 @decorator
-def toto(list_element):
-    li = brute_force_binary(list_element)
-    list_combinaison_sorted = sorted(li, key=lambda x: x[-1])
+def iteration(list_element):
+    list_combinaison_iteration = get_combinaison_by_iteration(list_element)
+    list_combinaison_sorted = sorted(list_combinaison_iteration, key=lambda x: x[-1])
     return list_combinaison_sorted
 
 
+# Bruteforce par récursivité
 
-
-# Génére la Liste des meilleures actions par récursivité
+# action mini = action avec le cout le plus faible
 action_mini = min([x[1] for x in list_action_dataset_20])
 
 best_action = []
 
 
-def get_combinaison(liste_des_actions, budget=500, liste=None):
+def get_combinaison_by_recursivity(liste_des_actions, budget=500, liste=None):
     if liste is None:
+        # liste où l'on stockera les combinaisons d'actions
         liste = []
     budget_restant = budget
     for action in liste_des_actions:
+        # on soustrait le cout de l'action au budget, et si >= 0
         if budget_restant - action[1] >= 0:
-
-            dictionnaire = {"name": action[0]}
+            # on stocke l'info de l'action en cours dans une liste
+            info_action = [action[0], action[1], action[2]]
 
             # on calcule le reste = budget - cout action
             reste = budget_restant - action[1]
-            dictionnaire["reste"] = reste
-
-            # calcule du benefice realise
-            gain_action = action[1] * action[2] / 100
-            dictionnaire["gain_action"] = gain_action
-
-            # on ajoute le dictionnaire à la liste des associations d'action
-            liste.append(dictionnaire)
+            # on ajoute la liste contenant les infos de l'action en cours
+            # à la liste des combinaisons d'action.
+            liste.append(info_action)
             if len(liste) > 0:
-                gain = sum([x["gain_action"] for x in liste])
+                gain = sum([x[1] * x[2] / 100 for x in liste])
                 copy_liste = liste.copy()
                 copy_liste.append(gain)
                 best_action.append(copy_liste)
@@ -90,43 +81,31 @@ def get_combinaison(liste_des_actions, budget=500, liste=None):
             if reste >= 4:
                 # copie de la liste des actions sans l'action en cours
                 index = liste_des_actions.index(action)
-                get_combinaison(liste_des_actions=liste_des_actions[index + 1:], budget=reste, liste=liste)
+                get_combinaison_by_recursivity(liste_des_actions=liste_des_actions[index + 1:],
+                                               budget=reste,
+                                               liste=liste)
                 liste.pop()
                 # sinon on passe à l'élément suivant de la liste
             else:
-                gain = sum([x["gain_action"] for x in liste])
+                # calcule du gain total de la combinaison d'action
+                gain = sum([x[1] * x[2] / 100 for x in liste])
+                # copie de celle-ci
                 copy_liste = liste.copy()
+                # ajout du gain a la copie
                 copy_liste.append(gain)
+                # on ajoute la copie à la liste des meilleures actions
                 best_action.append(copy_liste)
                 liste.pop()
-
         else:
             continue
 
 
 @decorator
-def start(liste_des_actions, budget=500, liste=None):
-    get_combinaison(liste_des_actions, budget, liste)
+def recursivity(liste_des_actions, budget=500, liste=None):
+    get_combinaison_by_recursivity(liste_des_actions, budget, liste)
     best_action_sorted = sorted(best_action, key=lambda x: x[-1])
     return best_action_sorted
 
 
-array_recursive = loop(list_action_dataset_20, start)
-print(array_recursive)
-array_binary = loop(list_action_dataset_20, toto)
-print(array_binary)
-nombre_entre = [x for x in range(1, 25, 1)]
-
-plt.plot(nombre_entre, array_recursive[0], label='bruteForce récursif', color='blue')
-plt.plot(nombre_entre, array_binary[0], label='bruteForce itératif', color='green')
-plt.xlabel('nombre entrée')
-plt.ylabel('temps execution (s)')
-plt.legend()
-plt.show()
-
-plt.plot(nombre_entre, array_recursive[1], label='bruteForce récursif', color='blue')
-plt.plot(nombre_entre, array_binary[1], label='bruteForce itératif', color='green')
-plt.xlabel('nombre entrée')
-plt.ylabel('Ram utilisée (Go)')
-plt.legend()
-plt.show()
+#print_result(recursivity(list_action_dataset_20[:20]))
+#print_result(iteration(list_action_dataset_20[:20]))

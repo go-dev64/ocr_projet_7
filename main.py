@@ -1,7 +1,7 @@
 import csv
 
-from decorateur import loop
-from bruteforce_recursive import start
+from utile import loop
+from analyse_complexite import start
 
 with open('csv_file/dataset_20.csv', newline='') as f:
     reader = csv.reader(f)
