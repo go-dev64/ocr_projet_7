@@ -6,10 +6,13 @@ import psutil
 def decorator(function):
     def wrapper(*args, **kwargs):
         start = time.time()
+        print("start")
         result = function(*args, **kwargs)
         end = time.time()
+        print("stop")
         total_time = end - start
-        return result, total_time
+        print(f"temps excution = {total_time}")
+        return result ,total_time
 
     return wrapper
 
