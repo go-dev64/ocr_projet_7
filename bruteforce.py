@@ -80,10 +80,11 @@ def get_combinaison_by_recursivity(liste_des_actions, budget=500, liste=None):
             # si reste different de 0 et supérieur au cout de l'action la plus base
             if reste >= 4:
                 # copie de la liste des actions sans l'action en cours
-                index = liste_des_actions.index(action)
-                get_combinaison_by_recursivity(liste_des_actions=liste_des_actions[index + 1:],
-                                               budget=reste,
-                                               liste=liste)
+
+                get_combinaison_by_recursivity(
+                    liste_des_actions=liste_des_actions[liste_des_actions.index(action) + 1:],
+                    budget=reste,
+                    liste=liste)
                 liste.pop()
                 # sinon on passe à l'élément suivant de la liste
             else:
@@ -106,6 +107,5 @@ def recursivity(liste_des_actions, budget=500, liste=None):
     best_action_sorted = sorted(best_action, key=lambda x: x[-1])
     return best_action_sorted
 
-
-#print_result(recursivity(list_action_dataset_20[:20]))
-#print_result(iteration(list_action_dataset_20[:20]))
+# print_result(recursivity(list_action_dataset_20[:20]))
+# print_result(iteration(list_action_dataset_20[:20]))
