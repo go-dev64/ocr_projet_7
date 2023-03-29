@@ -2,8 +2,6 @@ import pandas as pd
 
 import numpy as np
 
-from utile import decorator, print_result_dynamique
-
 
 def clean_csv(data):
     data["gain"] = round(data['price'] * data['profit'] / 100, 2)
@@ -17,43 +15,12 @@ def clean_csv(data):
     return data_cleaned
 
 
-"""data1 = clean_csv(pd.read_csv('csv_file/dataset1.csv'))
-data2 = clean_csv((pd.read_csv('csv_file/dataset2.csv')))"""
-
-data_1 = pd.read_csv('csv_file/dataset1.csv')
-data_1["price"] = round(data_1["price"] * 100)
-data_1["gain"] = round(data_1['price'] * data_1['profit'] / 100)
-data_1["index"] = data_1.index
-data_1['price'] = data_1['price'].astype(int)
-data_1['gain'] = data_1['gain'].astype(int)
-data_1 = data_1.loc[(data_1['price'] > 0) &
-                 (data_1['price'] < 500 * 10) &
-                 (data_1['profit'] > 0), :]
-
-data_1 = data_1[['index', "price", "gain"]]
-data_1 = np.asarray(data_1)
+data1 = clean_csv(pd.read_csv('csv_file/dataset1.csv'))
+data2 = clean_csv((pd.read_csv('csv_file/dataset2.csv')))
+data20 = clean_csv(pd.read_csv('csv_file/dataset_20.csv'))
 
 
-data1_verif = pd.read_csv('csv_file/dataset1.csv')
-data1_verif["gain"] = data1_verif['price'] * data1_verif['profit'] / 100
-data2cleaned = np.asarray(data1_verif)
-
-data2_verif = pd.read_csv('csv_file/dataset2.csv')
-data2_verif["gain"] = data2_verif['price'] * data2_verif['profit'] / 100
-data2_verif = np.asarray(data2_verif)
-
-data20 = pd.read_csv('csv_file/dataset_20.csv')
-data20.columns = ["name", "price", "profit"]
-data20_verif = data20.copy()
-data20_verif["gain"] = data20_verif['price'] * data20_verif['profit'] / 100
-data20_verif = np.asarray(data20_verif)
-data20["gain"] = round(data20['price'] * data20['profit'] / 100, 2)
-data20 = np.asarray(data20)
-
-
-
-@decorator
-def dynamique(budget, elements_list):
+def dynamique(elements_list, budget=5000):
     # creation de la matrice vide
     matrice = np.zeros((len(elements_list) + 1, budget + 1))
     # pour chaque element de la liste (i):
@@ -90,6 +57,14 @@ def dynamique(budget, elements_list):
     return matrice[-1][-1], element_selection
 
 
-"""print_result_dynamique(dynamique(5000, data1), data2cleaned)
-print_result_dynamique(dynamique(5000, data2), data2_verif)
-print_result_dynamique(dynamique(500, data20), data20_verif)"""
+def print_result_dynamique(function):
+    best_invest = function
+
+    print(f"Meilleur investissement: {[x[0] for x in best_invest[-1]]}\n"
+          f"Cout total arrondi: {sum([x[1] / 10 for x in best_invest[-1]])}€\n"
+          f"Profit round : {round(best_invest[0], 2)}€")
+
+
+print_result_dynamique(dynamique(data1))
+print_result_dynamique(dynamique(data2))
+print_result_dynamique(dynamique(data20))

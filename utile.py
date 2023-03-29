@@ -2,6 +2,8 @@ import time
 
 import psutil
 
+from optimized import dynamique, clean_csv
+
 
 def decorator(function):
     def wrapper(*args, **kwargs):
@@ -40,11 +42,13 @@ def print_result_dynamique(function, data):
     for v in best_invest[0][1]:
         for i in data:
             if v[0] == i[0]:
-                somme += i[1]
+                somme += i[1] / 10
                 prpr += i[3]
 
     liste_meilleur_action = best_invest[0][1]
     print(len(liste_meilleur_action))
     print(f"Meilleur investissement: {[x[0] for x in best_invest[0][-1]]}\n"
-          f"Cout total arrondi: {sum([x[1] / 10 for x in best_invest[0][1]])} / reel: {somme}€\n"
-          f"Profit round : {round(profit, 2)}€ / profit verifier = {prpr} ")
+          f"Cout total arrondi: {sum([x[1] / 10 for x in best_invest[0][1]])}€\n"
+          f"Profit round : {round(profit, 2)}€")
+
+
