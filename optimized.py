@@ -8,25 +8,47 @@ from utile import decorator, print_result_dynamique
 def clean_csv(data):
     data["gain"] = round(data['price'] * data['profit'] / 100, 2)
     data["price"] = round(data["price"], 2) * 10
-
     data_cleaned = np.asarray(
         data.loc[(data['price'] > 0) &
-                 (data['price'] < 500 * 100) &
+                 (data['price'] < 500 * 10) &
                  (data['profit'] > 0), :]
     )
     data_cleaned[:, 1] = np.ceil(data_cleaned[:, 1])
     return data_cleaned
 
 
-data1 = clean_csv(pd.read_csv('csv_file/dataset1.csv'))
-data2 = clean_csv((pd.read_csv('csv_file/dataset2.csv')))
-data_verif = pd.read_csv('csv_file/dataset1.csv')
-data_verif["gain"] = data_verif['price'] * data_verif['profit'] / 100
-data2cleaned = np.asarray(data_verif)
+"""data1 = clean_csv(pd.read_csv('csv_file/dataset1.csv'))
+data2 = clean_csv((pd.read_csv('csv_file/dataset2.csv')))"""
+
+data_1 = pd.read_csv('csv_file/dataset1.csv')
+data_1["price"] = round(data_1["price"] * 100)
+data_1["gain"] = round(data_1['price'] * data_1['profit'] / 100)
+data_1["index"] = data_1.index
+data_1['price'] = data_1['price'].astype(int)
+data_1['gain'] = data_1['gain'].astype(int)
+data_1 = data_1.loc[(data_1['price'] > 0) &
+                 (data_1['price'] < 500 * 10) &
+                 (data_1['profit'] > 0), :]
+
+data_1 = data_1[['index', "price", "gain"]]
+data_1 = np.asarray(data_1)
+
+
+data1_verif = pd.read_csv('csv_file/dataset1.csv')
+data1_verif["gain"] = data1_verif['price'] * data1_verif['profit'] / 100
+data2cleaned = np.asarray(data1_verif)
 
 data2_verif = pd.read_csv('csv_file/dataset2.csv')
 data2_verif["gain"] = data2_verif['price'] * data2_verif['profit'] / 100
 data2_verif = np.asarray(data2_verif)
+
+data20 = pd.read_csv('csv_file/dataset_20.csv')
+data20.columns = ["name", "price", "profit"]
+data20_verif = data20.copy()
+data20_verif["gain"] = data20_verif['price'] * data20_verif['profit'] / 100
+data20_verif = np.asarray(data20_verif)
+data20["gain"] = round(data20['price'] * data20['profit'] / 100, 2)
+data20 = np.asarray(data20)
 
 
 
@@ -68,5 +90,6 @@ def dynamique(budget, elements_list):
     return matrice[-1][-1], element_selection
 
 
-print_result_dynamique(dynamique(5000, data1), data2cleaned)
+"""print_result_dynamique(dynamique(5000, data1), data2cleaned)
 print_result_dynamique(dynamique(5000, data2), data2_verif)
+print_result_dynamique(dynamique(500, data20), data20_verif)"""
