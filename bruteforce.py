@@ -1,7 +1,5 @@
 import csv
 
-from utile import decorator, print_result
-
 with open('csv_file/dataset_20.csv', newline='') as f:
     reader = csv.reader(f)
     header = [next(reader)]
@@ -40,9 +38,9 @@ def get_combinaison_by_iteration(liste_element):
     return list_combinaison
 
 
-@decorator
 def iteration(list_element):
     list_combinaison_iteration = get_combinaison_by_iteration(list_element)
+    # tri de la liste par rapport au profit généré
     list_combinaison_sorted = sorted(list_combinaison_iteration, key=lambda x: x[-1])
     return list_combinaison_sorted
 
@@ -101,11 +99,20 @@ def get_combinaison_by_recursivity(liste_des_actions, budget=500, liste=None):
             continue
 
 
-@decorator
 def recursivity(liste_des_actions, budget=500, liste=None):
     get_combinaison_by_recursivity(liste_des_actions, budget, liste)
+    # tri de la liste par rapport au profit généré
     best_action_sorted = sorted(best_action, key=lambda x: x[-1])
     return best_action_sorted
 
-# print_result(recursivity(list_action_dataset_20[:20]))
-# print_result(iteration(list_action_dataset_20[:20]))
+
+def print_result(function, name):
+    best_invest = function
+    print(f"Résultat avec la function {name.__name__}():\n"
+          f'    Meilleur investissement: {[x[0] for x in best_invest[-1][:-1]]}\n'
+          f'    Cout total: {sum([x[1] for x in best_invest[-1][:-1]])}€\n'
+          f'    Profit: {round(best_invest[-1][-1], 2)}€')
+
+
+print_result(recursivity(list_action_dataset_20), recursivity)
+print_result(iteration(list_action_dataset_20), iteration)

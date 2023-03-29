@@ -7,7 +7,6 @@ import numpy as np
 from utile import decorator, print_result_dynamique
 
 
-
 def clean_csv(data):
     data["gain"] = round(data['price'] * data['profit'] / 100, 2)
     data["price"] = round(data["price"], 2) * 10
@@ -24,12 +23,12 @@ data1 = clean_csv(pd.read_csv('csv_file/dataset1.csv'))
 data2 = pd.read_csv('csv_file/dataset1.csv')
 data2["gain"] = round(data2['price'] * data2['profit'] / 100, 2)
 data2["price"] = round(data2["price"], 2)
-data2cleaned = np.asarray(data2.loc[(data2['price'] > 0) &
-                 (data2['price'] < 500 * 100) &
-                 (data2['profit'] > 0), :]
-    )
-print(len(data1))
-print(len(data2cleaned))
+data2cleaned = np.asarray(
+    data2.loc[(data2['price'] > 0) &
+              (data2['price'] < 500 * 100) &
+              (data2['profit'] > 0), :]
+)
+
 
 @decorator
 def dynamique(budget, elements_list):

@@ -32,13 +32,6 @@ def loop(data_list, function, input_number):
     return array_time, array_ram, array_input
 
 
-def print_result(function):
-    best_invest = function
-    print(f"Meilleur investissement: {[x[0] for x in best_invest[0][-1][:-1]]}\n"
-          f"Cout total: {sum([x[1] for x in best_invest[0][-1]])}€\n"
-          f"Profit: {round(best_invest[0][-1][-1], 2)}€")
-
-
 def print_result_dynamique(function, data):
     best_invest = function
     profit = best_invest[0][0]
