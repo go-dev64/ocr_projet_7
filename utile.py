@@ -2,7 +2,6 @@ import time
 
 import psutil
 
-from optimized import dynamique, clean_csv
 
 
 def decorator(function):

@@ -2,13 +2,16 @@ import pandas as pd
 
 import numpy as np
 
+from utile import decorator
 
-def clean_csv(data):
-    data["gain"] = round(data['price'] * data['profit'] / 100, 2)
-    data["price"] = round(data["price"], 2) * 10
+
+def clean_csv(data, budget=500):
+    multiplicator = 10
+    data["gain"] = round(data['price'] * data['profit'] / 100, 3)
+    data["price"] = round(data["price"], 2) * multiplicator
     data_cleaned = np.asarray(
         data.loc[(data['price'] > 0) &
-                 (data['price'] < 500 * 10) &
+                 (data['price'] < budget * multiplicator) &
                  (data['profit'] > 0), :]
     )
     data_cleaned[:, 1] = np.ceil(data_cleaned[:, 1])
@@ -20,6 +23,21 @@ data2 = clean_csv((pd.read_csv('csv_file/dataset2.csv')))
 data20 = clean_csv(pd.read_csv('csv_file/dataset_20.csv'))
 
 
+def real_coast(actions_list_selected, data):
+    real_invest = 0
+    real_profit = 0
+    list_index = []
+    for v in actions_list_selected:
+        for idx, i in enumerate(data):
+            if v[0] == i[0]:
+                list_index.append(idx)
+                real_invest += i[1]
+                real_profit += i[3]
+    print(real_profit, real_invest, list_index)
+    return real_invest, real_profit, list_index
+
+
+@decorator
 def dynamique(elements_list, budget=5000):
     # creation de la matrice vide
     matrice = np.zeros((len(elements_list) + 1, budget + 1))
@@ -54,17 +72,26 @@ def dynamique(elements_list, budget=5000):
 
         n -= 1
 
+    real = real_coast(element_selection, elements_list)
+    new_budget = budget - real[0]
+    print(new_budget)
+    if new_budget > 0:
+        elements_list = np.delete(elements_list, real[2], 0)
+        new_budget = budget - real[0]
+
+        print(elements_list, len(elements_list))
+        dynamique(elements_list, budget=budget - real[0] * 10)
+
     return matrice[-1][-1], element_selection
 
 
 def print_result_dynamique(function):
     best_invest = function
-
-    print(f"Meilleur investissement: {[x[0] for x in best_invest[-1]]}\n"
-          f"Cout total arrondi: {sum([x[1] / 10 for x in best_invest[-1]])}€\n"
-          f"Profit round : {round(best_invest[0], 2)}€")
+    print(f"Meilleur investissement: {[x for x in best_invest[0][-1]]}\n"
+          f"Cout total arrondi: {sum([x[1] / 10 for x in best_invest[0][-1]])}€\n"
+          f"Profit round : {best_invest[0][0]}")
 
 
 print_result_dynamique(dynamique(data1))
-print_result_dynamique(dynamique(data2))
-print_result_dynamique(dynamique(data20))
+"""print_result_dynamique(dynamique(data2))
+print_result_dynamique(dynamique(data20))"""
