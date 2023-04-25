@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 from bruteforce import list_action_dataset_20, recursivity, iteration
 
+from optimized import dynamique, data1, data2, data20
+
 from utile import loop
 
 
@@ -11,6 +13,8 @@ array_recursive = loop(list_action_dataset_20, recursivity, 25)
 print(array_recursive[0])
 array_binary = loop(list_action_dataset_20, iteration, 25)
 print(array_binary[0])
+
+array_dynamique = loop(data1, dynamique, 1000)
 
 
 plt.plot(array_recursive[2], array_recursive[0], label='bruteForce récursif', color='blue')
