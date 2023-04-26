@@ -18,18 +18,21 @@ def decorator(function):
     return wrapper
 
 
-def loop(data_list, function, input_number):
+def loop(data_list, function, input_number, pas):
     array_time = []
     array_ram = []
     array_input = []
-    for i in range(1, input_number, 1):
+    for i in range(1, input_number, pas):
         array_input.append(i)
-        x = function(data_list[:i])
-        array_time.append(x[1])
+        start = time.time()
+        function(data_list[:i])
+        end = time.time()
+        total_time = end - start
+        print("time: ", total_time)
+        array_time.append(total_time)
         memory = psutil.virtual_memory()
         array_ram.append(memory[3] / 1000000000)
-        print('nbr entree', i, "/ram:", memory[3] / 1000000000, "/time:", x[1])
-        print(len(x[0]))
+        print('nbr entree', i, "/ram:", memory[3] / 1000000000, "/time:", total_time)
     return array_time, array_ram, array_input
 
 

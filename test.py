@@ -99,7 +99,6 @@ def print_result(list_action):
           f"Profit: {round(sum([x[3] for x in list_action]), 2)}€")
 
 
-@decorator
 def print_result_dynamique(actions_list):
     best_invest = get_best_invest(actions_list)
     cost_best_invest = sum([x[1] for x in best_invest[1]])
@@ -108,12 +107,13 @@ def print_result_dynamique(actions_list):
     if len(actions_list_filtered) > 0:
         list_action_new_budget = get_best_invest(actions_list_filtered, math.ceil(new_budget * 100))
         final_action_list = np.append(best_invest[1], list_action_new_budget[1], axis=0)
-        print_result(list_action=final_action_list)
+        #print_result(list_action=final_action_list)
 
     else:
-        print_result(list_action=best_invest[1])
+        #print_result(list_action=best_invest[1])
+        pass
 
 
-print_result_dynamique(data1)
+"""print_result_dynamique(data1)
 print_result_dynamique(data2)
-print_result_dynamique(data20)
+print_result_dynamique(data20)"""

@@ -1,6 +1,6 @@
 import csv
 
-with open('csv_file/dataset_20.csv', newline='') as f:
+with open('csv_file/dataset_24.csv', newline='') as f:
     reader = csv.reader(f)
     header = [next(reader)]
     list_action_dataset_20 = [[row[0], int(row[1]), int(row[2])] for row in reader]
@@ -114,5 +114,5 @@ def print_result(function, name):
           f'    Profit: {round(best_invest[-1][-1], 2)}€')
 
 
-print_result(recursivity(list_action_dataset_20), recursivity)
-print_result(iteration(list_action_dataset_20), iteration)
+"""print_result(recursivity(list_action_dataset_20), recursivity)
+print_result(iteration(list_action_dataset_20), iteration)"""
