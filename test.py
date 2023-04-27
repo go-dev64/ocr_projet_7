@@ -38,15 +38,17 @@ def filter_data(data, budget, element_list):
     data_filtered = data[data[:, 1] <= budget]
     data_filtered[:, 4] = np.ceil(data_filtered[:, 1] * 100)
     name_list = [x[0] for x in element_list]
+    indices_list = []
     for idx, i in enumerate(data_filtered):
         if i[0] in name_list:
-            data_filtered = np.delete(data_filtered, idx, axis=0)
+            indices_list.append(idx)
+    data_filtered = np.delete(data_filtered, indices_list, axis=0)
     return data_filtered
 
 
 data1 = clean_csv(pd.read_csv('csv_file/dataset1.csv'))
 data2 = clean_csv((pd.read_csv('csv_file/dataset2.csv')))
-data20 = clean_csv(pd.read_csv('csv_file/dataset_20.csv'))
+data20 = clean_csv(pd.read_csv('csv_file/dataset_24.csv'))
 
 
 def get_best_invest(elements_list, budget=5000):
@@ -107,11 +109,10 @@ def print_result_dynamique(actions_list):
     if len(actions_list_filtered) > 0:
         list_action_new_budget = get_best_invest(actions_list_filtered, math.ceil(new_budget * 100))
         final_action_list = np.append(best_invest[1], list_action_new_budget[1], axis=0)
-        #print_result(list_action=final_action_list)
+        print_result(list_action=final_action_list)
 
     else:
-        #print_result(list_action=best_invest[1])
-        pass
+        print_result(list_action=best_invest[1])
 
 
 """print_result_dynamique(data1)
