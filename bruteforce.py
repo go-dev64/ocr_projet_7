@@ -1,47 +1,51 @@
 import csv
 
-with open('csv_file/dataset_24.csv', newline='') as f:
+with open("csv_file/dataset_24.csv", newline="") as f:
     reader = csv.reader(f)
     header = [next(reader)]
-    list_action_dataset_20 = [[row[0], int(row[1]), int(row[2])] for row in reader]
+    list_action_dataset_20 = [
+        [row[0], int(row[1]), int(row[2])] for row in reader
+    ]
 
 
-def get_combinaison_by_iteration(liste_element):
-    # liste des différentes combinaison possible
-    list_combinaison = []
-    # on définit le nombre d'éléments dans la liste
-    nombre_element = len(liste_element)
-    # on calcule le nombre de combinaisons
-    nombre_bits_combinaison = 2 ** nombre_element
-    # pour chaque combinaison dans le nombre total de combinaison possible :
-    for i in range(nombre_bits_combinaison):
-        # on convertit le nombre i en nombre binaire de longueur de là du nombre d'éléments longueur du tableau
-        combinaison_bits = f"{i:0{nombre_element}b}"
+def get_combination_by_iteration(liste_element):
+    # liste des différentes combinaisons possible
+    combination_list = []
+    # on définit le nombre d'éléments dans la liste_element
+    number_element = len(liste_element)
+    # on calcule le nombre de combinaisons possible
+    number_bits_combination = 2**number_element
+    # pour chaque combinaison dans le number_bits_combination:
+    for i in range(number_bits_combination):
+        # on convertit i en nombre binaire
+        # de longueur de là du nombre d'éléments longueur du tableau
+        bit_number = f"{i:0{number_element}b}"
         # on convertit le string en list d'entier 0 et 1.
-        int_combinaison = [int(x) for x in combinaison_bits]
+        int_combinaison = [int(x) for x in bit_number]
         # on associe chaque element à l'index du tableau d'action.
         combinaison = []
         for idx, element in enumerate(int_combinaison):
             # si i = 1 , alors l'index de i  = list_action[index de i]
-            if element != 0:
+            if element == 1:
                 # on ajoute l'action dans la combinaison
                 combinaison.append(liste_element[idx])
-        # on ajoute la combinaison dans la liste des combinaisons : Si :
         # Si la somme du cout action :
         if sum([x[1] for x in combinaison]) < 500:
             # on calcule le gain total de la combinaison
             gain_total = sum([x[1] * x[2] / 100 for x in combinaison])
             combinaison.append(gain_total)
             # alors on ajoute la combinaison dans la liste des combinaisons
-            list_combinaison.append(combinaison)
+            combination_list.append(combinaison)
 
-    return list_combinaison
+    return combination_list
 
 
 def iteration(list_element):
-    list_combinaison_iteration = get_combinaison_by_iteration(list_element)
+    list_combinaison_iteration = get_combination_by_iteration(list_element)
     # tri de la liste par rapport au profit généré
-    list_combinaison_sorted = sorted(list_combinaison_iteration, key=lambda x: x[-1])
+    list_combinaison_sorted = sorted(
+        list_combinaison_iteration, key=lambda x: x[-1]
+    )
     return list_combinaison_sorted
 
 
@@ -53,7 +57,11 @@ action_mini = min([x[1] for x in list_action_dataset_20])
 best_action = []
 
 
-def get_combinaison_by_recursivity(liste_des_actions, budget=500, liste=None):
+def get_combinaison_by_recursivity(
+        liste_des_actions,
+        budget=500,
+        liste=None
+):
     if liste is None:
         # liste où l'on stockera les combinaisons d'actions
         liste = []
@@ -75,14 +83,18 @@ def get_combinaison_by_recursivity(liste_des_actions, budget=500, liste=None):
                 copy_liste.append(gain)
                 best_action.append(copy_liste)
 
-            # si reste different de 0 et supérieur au cout de l'action la plus base
+            # si reste different de 0 et
+            # supérieur au cout de l'action la plus base
             if reste >= 4:
                 # copie de la liste des actions sans l'action en cours
 
                 get_combinaison_by_recursivity(
-                    liste_des_actions=liste_des_actions[liste_des_actions.index(action) + 1:],
+                    liste_des_actions=liste_des_actions[
+                        liste_des_actions.index(action) + 1:
+                    ],
                     budget=reste,
-                    liste=liste)
+                    liste=liste,
+                )
                 liste.pop()
                 # sinon on passe à l'élément suivant de la liste
             else:
@@ -108,10 +120,12 @@ def recursivity(liste_des_actions, budget=500, liste=None):
 
 def print_result(function, name):
     best_invest = function
-    print(f"Résultat avec la function {name.__name__}():\n"
-          f'    Meilleur investissement: {[x[0] for x in best_invest[-1][:-1]]}\n'
-          f'    Cout total: {sum([x[1] for x in best_invest[-1][:-1]])}€\n'
-          f'    Profit: {round(best_invest[-1][-1], 2)}€')
+    print(
+        f"Résultat avec la function {name.__name__}():\n"
+        f"Meilleur investissement: {[x[0] for x in best_invest[-1][:-1]]}\n"
+        f"Cout total: {sum([x[1] for x in best_invest[-1][:-1]])}€\n"
+        f"Profit: {round(best_invest[-1][-1], 2)}€"
+    )
 
 
 """print_result(recursivity(list_action_dataset_20), recursivity)

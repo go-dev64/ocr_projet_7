@@ -3,7 +3,6 @@ import time
 import psutil
 
 
-
 def decorator(function):
     def wrapper(*args, **kwargs):
         start = time.time()
@@ -22,7 +21,7 @@ def loop(data_list, function, input_number, pas):
     array_time = []
     array_ram = []
     array_input = []
-    for i in range(1, input_number, pas):
+    for i in range(15, input_number, pas):
         array_input.append(i)
         start = time.time()
         function(data_list[:i])
@@ -52,5 +51,3 @@ def print_result_dynamique(function, data):
     print(f"Meilleur investissement: {[x[0] for x in best_invest[0][-1]]}\n"
           f"Cout total arrondi: {sum([x[1] / 10 for x in best_invest[0][1]])}€\n"
           f"Profit round : {round(profit, 2)}€")
-
-
