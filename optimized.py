@@ -89,5 +89,5 @@ def print_result_dynamique(function, data):
 
 
 print_result_dynamique(dynamique(data1), data1_verif)
-"""print_result_dynamique(dynamique(data2))
-print_result_dynamique(dynamique(data20))"""
+print_result_dynamique(dynamique(data2))
+print_result_dynamique(dynamique(data20))
