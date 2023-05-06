@@ -1,9 +1,12 @@
 import csv
 
+
 with open("csv_file/dataset_20.csv", newline="") as f:
     reader = csv.reader(f)
     header = [next(reader)]
-    list_action_dataset_20 = [[row[0], int(row[1]), int(row[2])] for row in reader]
+    list_action_dataset_20 = [
+        [row[0], int(row[1]), int(row[2])] for row in reader
+    ]
 
 
 def get_combinaison_by_iteration(liste_element):
@@ -25,7 +28,6 @@ def get_combinaison_by_iteration(liste_element):
         for idx, element in enumerate(int_combinaison):
             if element == 1:
                 combinaison.append(liste_element[idx])
-
         if sum([x[1] for x in combinaison]) < 500:
             gain_total = sum([x[1] * x[2] / 100 for x in combinaison])
             combinaison.append(gain_total)
@@ -103,9 +105,9 @@ def print_result(function, name):
     best_invest = function
     print(
         f"Résultat avec la function {name.__name__}():\n"
-        f"    Meilleur investissement: {[x[0] for x in best_invest[-1][:-1]]}\n"
-        f"    Cout total: {sum([x[1] for x in best_invest[-1][:-1]])}€\n"
-        f"    Profit: {round(best_invest[-1][-1], 2)}€"
+        f"Meilleur investissement: {[x[0] for x in best_invest[-1][:-1]]}\n"
+        f"Cout total: {sum([x[1] for x in best_invest[-1][:-1]])}€\n"
+        f"Profit: {round(best_invest[-1][-1], 2)}€"
     )
 
 

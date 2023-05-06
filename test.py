@@ -19,7 +19,9 @@ def clean_csv(data, budget=500):
     data["price_round"] = round(data["price"], 2) * 10
     data_cleaned = np.asarray(
         data.loc[
-            (data["price"] > 0) & (data["price"] < budget * 10) & (data["profit"] > 0),
+            (data["price"] > 0)
+            & (data["price"] < budget * 10)
+            & (data["profit"] > 0),
             :,
         ]
     )
@@ -61,7 +63,6 @@ def get_best_profit(elements_list, budget=5000):
     :param budget: number -> bu
     :return: profit max, actions list of best invest
     """
-
     matrice = np.zeros((len(elements_list) + 1, budget + 1))
     for i in np.arange(1, len(elements_list) + 1):
         for w in np.arange(1, budget + 1):
@@ -102,7 +103,7 @@ def print_result(list_action):
     print(
         f"Meilleur investissement({len(list_action)} actions):\n"
         f"{[x[0] for x in list_action]}\n"
-        f"Cout total: {round(sum([x[1] for x in list_action]), 2)}€\n"
+        f"Coût total: {round(sum([x[1] for x in list_action]), 2)}€\n"
         f"Profit: {round(sum([x[3] for x in list_action]), 2)}€"
     )
 
@@ -118,7 +119,11 @@ def get_best_invest(actions_list):
         list_action_new_budget = get_best_profit(
             actions_list_filtered, math.ceil(new_budget * 100)
         )
-        final_action_list = np.append(best_invest[1], list_action_new_budget[1], axis=0)
+        final_action_list = np.append(
+            best_invest[1],
+            list_action_new_budget[1],
+            axis=0
+        )
         print_result(list_action=final_action_list)
 
     else:
